@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #chat {
+            width: 400px;
+            background: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        #chat h1 {
+            background: #007BFF;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.5em;
+        }
+        #messages {
+            list-style-type: none;
+            padding: 20px;
+            height: 300px;
+            overflow-y: scroll;
+            margin: 0;
+        }
+        #messages li {
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        #input-container {
+            display: flex;
+            border-top: 1px solid #ddd;
+            padding: 10px;
+            background: #f9f9f9;
+        }
+        #username, #message {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px;
+            font-size: 1em;
+        }
+        #username {
+            max-width: 100px;
+        }
+        #message {
+            flex: 2;
+        }
+        button {
+            background: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat">
+        <h1>Chat Application</h1>
+        <ul id="messages"></ul>
+        <div id="input-container">
+            <input id="username" type="text" placeholder="Username" required />
+            <input id="message" type="text" placeholder="Enter a message" required />
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+    <script>
+        const ws = new WebSocket("ws://localhost:8080/ws");
+        ws.onmessage = function(event) {
+            const messages = document.getElementById('messages');
+            const message = document.createElement('li');
+            const msg = JSON.parse(event.data);
+            message.textContent = `${msg.username}: ${msg.message}`;
+            messages.appendChild(message);
+        };
+
+        function sendMessage() {
+            const username = document.getElementById('username').value;
+            const message = document.getElementById('message').value;
+            ws.send(JSON.stringify({ username: username, message: message }));
+            document.getElementById('message').value = '';
+        }
+    </script>
+</body>
+</html>

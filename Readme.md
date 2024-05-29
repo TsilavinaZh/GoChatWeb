@@ -9,9 +9,9 @@ Cette application est un simple chat en temps réel utilisant Go pour le backend
 
 ## Exécutez le serveur :
 
-    ```sh
+```sh
     go run main.go
-    ```
+```
 ## Fonctionnalités
 
 - Chat en temps réel entre plusieurs clients.
